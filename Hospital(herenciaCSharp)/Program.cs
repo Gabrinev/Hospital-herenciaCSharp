@@ -10,8 +10,8 @@ namespace Hospital_herenciaCSharp_
     {
         static void Main(string[] args)
         {
-            List<Medico> medicos = new List<Medico>();
-            List<Patient> pacientes = new List<Patient>();
+            List<Medico> docs = new List<Medico>();
+            List<Patient> patients = new List<Patient>();
             
             int option = menu();
 
@@ -20,22 +20,27 @@ namespace Hospital_herenciaCSharp_
                 switch (option)
                 {
                     case 1:
-                        medicos.Add(registerDoc());
+                        docs.Add(registerDoc());
                         break;
                     case 2:
-                        Patient p = registerPatient(medicos);
+                        Patient p = registerPatient(docs);
                         if (p != null)
-                            pacientes.Add(p);
+                            patients.Add(p);
                         else Console.WriteLine("Medico no existente");
 
                         break;
                     case 3:
+                        listDocs(docs);
                         break;
                     case 4:
+                        listPatientXdoc(patients);
                         break;
                     case 5:
-                        break;
+                        deletePatient(patients);
+                        
+                            break;
                     case 6:
+                        listAll(docs,patients);
                         break;
                 }
                 option = menu();
@@ -81,38 +86,130 @@ namespace Hospital_herenciaCSharp_
 
         static Medico registerDoc()
         {
-            String dni, nombre, apellido;
+            String dni, name, surname;
             int id;
-
+            Console.WriteLine(" ");
             Console.WriteLine("Escriba el dni ");
             dni =Console.ReadLine();
             Console.WriteLine("Escriba el nombre ");
-            nombre = Console.ReadLine();
+            name = Console.ReadLine();
             Console.WriteLine("Escriba el apellido ");
-            apellido = Console.ReadLine();
+            surname = Console.ReadLine();
             Console.WriteLine("Escriba el id medico ");
             id = Convert.ToInt32(Console.ReadLine());
 
-            Medico m = new Medico(dni,nombre,apellido,id);
+            Medico m = new Medico(dni, name, surname, id);
             
             return m;
+        }
+
+        static void listAll(List<Medico> docs, List<Patient> patients)
+        {
+            Console.WriteLine(" ");
+            Console.WriteLine("MEDICOS: ");
+            foreach (Medico m in docs)
+            {
+                Console.WriteLine(m.ToString());
+            }
+
+            Console.WriteLine("PACIENTES: ");
+            foreach (Patient p in patients)
+            {
+                Console.WriteLine(p.ToString());
+            }
+            Console.WriteLine(" ");
+            Console.WriteLine("Pulsa cualquier tecla para salir...");
+            Console.ReadKey();
+
+        }
+
+
+        static List<Patient> deletePatient(List<Patient> patients)
+        {
+            Console.WriteLine(" ");
+            Patient temp = new Patient("dni","xxxx","xxxx",987,987);
+            Console.WriteLine("ID Paciente a eliminar ");
+            
+            int id = Convert.ToInt32(Console.ReadLine());
+            foreach (Patient p in patients)
+            {
+                if (p.id_patient == id)
+                {
+                    temp = p;
+                }
+            }
+            if (patients.Remove(temp))
+            {
+                Console.WriteLine(" ");
+                Console.WriteLine("Eliminado exitosamente");
+                Console.WriteLine(" ");
+                Console.WriteLine("Pulsa cualquier tecla para salir...");
+                Console.ReadKey();
+                return patients;
+            }
+            else
+            {
+                Console.WriteLine(" ");
+                Console.WriteLine("No se ha podido eliminar, compruebe que exista");
+                Console.WriteLine(" ");
+                Console.WriteLine("Pulsa cualquier tecla para salir...");
+                Console.ReadKey();
+
+                return null;
+            }
+
+            
+
+        }
+        static void listPatientXdoc(List<Patient> patients)
+        {
+            Console.WriteLine(" ");
+            Console.WriteLine("ID Medico ");
+            int idDoc = Convert.ToInt32(Console.ReadLine());
+            foreach (Patient p in patients)
+            {
+                if (p.id_asigned_doc == idDoc)
+                {
+                    Console.WriteLine(p.ToString());
+                }
+            }
+            Console.WriteLine(" ");
+            Console.WriteLine("Pulsa cualquier tecla para salir...");
+            Console.ReadKey();
+
+        }
+
+
+        static void listDocs(List<Medico> docs)
+        {
+
+            Console.WriteLine(" ");
+            Console.WriteLine("MEDICOS: ");
+            foreach (Medico m in docs)
+            {
+                Console.WriteLine(m.ToString());
+            }
+            Console.WriteLine(" ");
+            Console.WriteLine("Pulsa cualquier tecla para salir...");
+            Console.ReadKey();
+
         }
         static Patient registerPatient(List<Medico> li)
         {
             String dni, nombre, apellido;
             int id, id_doc;
-            Boolean exists = false;
             Patient p;
 
 
             if (li.Count() == 0)
             {
+                Console.WriteLine(" ");
                 Console.WriteLine("No hay medicos disponibles");
                 return null;
             }else
             {
-                
 
+                Console.WriteLine(" ");
                 Console.WriteLine("Escriba el dni ");
                 dni = Console.ReadLine();
                 Console.WriteLine("Escriba el nombre ");
@@ -126,7 +223,7 @@ namespace Hospital_herenciaCSharp_
                 id_doc = Convert.ToInt32(Console.ReadLine());
                 foreach (Medico m in li)
                 {
-                    if (m.id_medico == id_doc)
+                    if (m.id_doc == id_doc)
                     {
 
                         return p = new Patient(dni, nombre, apellido, id, id_doc);
@@ -145,8 +242,8 @@ namespace Hospital_herenciaCSharp_
     class Persona
     {
         private String _dni;
-        private String _nombre;
-        private String _apellido;
+        private String _name;
+        private String _surname;
 
         public String dni
         {
@@ -159,42 +256,50 @@ namespace Hospital_herenciaCSharp_
                 _dni = value;
             }
         }
-        public String nombre
+        public String name
         {
             get
             {
-                return _nombre;
+                return _name;
             }
         }
-        public String apellido
+        public String surname
         {
             get
             {
-                return _apellido;
+                return _surname;
             }
         }
-        public Persona(String dni, String nombre, String apellido)
+        public Persona(String dni, String name, String surname)
         {
             _dni = dni;
-            _nombre = nombre;
-            _apellido = apellido;
+            _name = name;
+            _surname = surname;
+        }
+        public override string ToString()
+        {
+            return "dni: " + this.dni + " nombre: " + this.name + " apellido: " + this.surname;
         }
     }
 
     class Medico : Persona
     {
-        private int _id_medico;
+        private int _id_doc;
 
-        public Medico(String dni, String nombre, String apellido, int id): base(dni, nombre, apellido)
+        public Medico(String dni, String name, String surname, int id): base(dni, name, surname)
         {
-            _id_medico = id;
+            _id_doc = id;
         }
-        public int id_medico
+        public int id_doc
         {
             get
             {
-                return _id_medico;
+                return _id_doc;
             }
+        }
+        public override string ToString()
+        {
+            return base.ToString() + " " + " id medico: " + this.id_doc;
         }
 
     }
@@ -205,7 +310,7 @@ namespace Hospital_herenciaCSharp_
         private int _id_patient;
         private int _id_asigned_doc;
 
-        public Patient(String dni, String nombre, String apellido, int id, int id_doc) : base(dni, nombre, apellido)
+        public Patient(String dni, String name, String surname, int id, int id_doc) : base(dni, name, surname)
         {
             _id_patient = id;
             _id_asigned_doc = id_doc;
@@ -218,6 +323,18 @@ namespace Hospital_herenciaCSharp_
                 return _id_patient;
             }
         }
+        public int id_asigned_doc
+        {
+            get
+            {
+                return _id_asigned_doc;
+            }
+        }
+        public override string ToString()
+        {
+            return base.ToString() + " " + " id patient: "+ this.id_patient + " id doctor asignado: " + this.id_asigned_doc ;
+        }
+
     }
 
 
