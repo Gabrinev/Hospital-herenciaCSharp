@@ -42,6 +42,7 @@ namespace Hospital_herenciaCSharp_
                     case 6:
                         listAll(docs,patients);
                         break;
+                    
                 }
                 option = menu();
             }
@@ -205,6 +206,10 @@ namespace Hospital_herenciaCSharp_
             {
                 Console.WriteLine(" ");
                 Console.WriteLine("No hay medicos disponibles");
+                Console.WriteLine(" ");
+                Console.WriteLine("Pulsa cualquier tecla para salir...");
+                Console.ReadKey();
+
                 return null;
             }else
             {
@@ -237,105 +242,7 @@ namespace Hospital_herenciaCSharp_
             }
                     
         }
-    }
-
-    class Persona
-    {
-        private String _dni;
-        private String _name;
-        private String _surname;
-
-        public String dni
-        {
-            get
-            {
-                return _dni;
-            }
-            set
-            {
-                _dni = value;
-            }
-        }
-        public String name
-        {
-            get
-            {
-                return _name;
-            }
-        }
-        public String surname
-        {
-            get
-            {
-                return _surname;
-            }
-        }
-        public Persona(String dni, String name, String surname)
-        {
-            _dni = dni;
-            _name = name;
-            _surname = surname;
-        }
-        public override string ToString()
-        {
-            return "dni: " + this.dni + " nombre: " + this.name + " apellido: " + this.surname;
-        }
-    }
-
-    class Medico : Persona
-    {
-        private int _id_doc;
-
-        public Medico(String dni, String name, String surname, int id): base(dni, name, surname)
-        {
-            _id_doc = id;
-        }
-        public int id_doc
-        {
-            get
-            {
-                return _id_doc;
-            }
-        }
-        public override string ToString()
-        {
-            return base.ToString() + " " + " id medico: " + this.id_doc;
-        }
-
-    }
-
-    class Patient : Persona
-    { 
- 
-        private int _id_patient;
-        private int _id_asigned_doc;
-
-        public Patient(String dni, String name, String surname, int id, int id_doc) : base(dni, name, surname)
-        {
-            _id_patient = id;
-            _id_asigned_doc = id_doc;
-        }
-
-        public int id_patient
-    {
-            get
-            {
-                return _id_patient;
-            }
-        }
-        public int id_asigned_doc
-        {
-            get
-            {
-                return _id_asigned_doc;
-            }
-        }
-        public override string ToString()
-        {
-            return base.ToString() + " " + " id patient: "+ this.id_patient + " id doctor asignado: " + this.id_asigned_doc ;
-        }
-
-    }
+    }  
 
 
 }
